@@ -18,5 +18,9 @@ class MessagesController < ApplicationController
   end
 
   def destroy
+    @message = current_user.messages.find params[:id]
+    @message.destroy
+    flash[:success] = 'Success'
+    redirect_to topic_path(@message.topic)
   end
 end

@@ -11,6 +11,6 @@ Scenario: Browsing a single message on topic
     | Content   | Topic             |
     | message 1 | Title: count to 1 |
     | message 2 | Title: BDD        |
-  When I am on the page showing a topic with the title "count to 1"
+  When I am on the topic "count to 1" page
   Then I should see a message with the content "message 1"
   And I should not see a message with the content "message 2"

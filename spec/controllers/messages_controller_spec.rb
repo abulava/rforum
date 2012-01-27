@@ -27,7 +27,7 @@ describe MessagesController do
   end
 
   describe "GET 'new'" do
-    login_user
+    before { login_user }
 
     it "should be successful" do
       get :new, :topic_id => @topic
@@ -36,7 +36,7 @@ describe MessagesController do
   end
 
   describe "POST 'create'" do
-    login_user
+    before { login_user }
 
 #    it "should redirect to the topic page" do
 #      post :create, :micropost => @attr, :topic_id => @topic

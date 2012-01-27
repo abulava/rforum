@@ -26,7 +26,7 @@ Then /^I should see a "([^"]*)" link$/ do |topics_link|
   page.should have_link(topics_link, :href => topics_path)
 end
 
-When /^I am on the page showing a topic with the title "([^"]*)"$/ do |title|
+When /I am on the topic "([^"]*)" page$/ do |title|
   topic = Topic.find_by_title(title)
   visit topic_path(topic)
 end
@@ -77,3 +77,24 @@ end
 Then /^I should see a value "([^"]*)" in a field "([^"]*)"$/ do |value, field|
   find_field(field).value.should == value
 end
+
+Then /^I cannot delete "([^"]*)" message$/ do |content|
+   pending
+end
+
+Then /^I delete "([^"]*)" message with a notification message "([^"]*)"$/ do |content, flash_message|
+  message = Message.find_by_content content
+
+  page.should have_content(message.content)
+
+  within ".messages #message_#{message.id}" do
+    click_on "Delete message"
+  end
+
+  page.should have_content(flash_message)
+  visit topic_path(message.topic)
+  page.should_not have_content(content)
+end
+
+
+

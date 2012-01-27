@@ -1,8 +1,12 @@
 <tr>
-  <td class="message">
+  <td class="message" id='<%= dom_id message %>'>
     <span class="timestamp">
       Posted <%= time_ago_in_words(message.created_at) %> ago.
     </span><br />
     <span class="content"><%= message.content %></span>
+
+    <% if current_user && current_user == message.user %>
+      <%= link_to "Delete message", [message.topic, message], :method => :delete %>
+    <% end %>
   </td>
 </tr>
