@@ -12,6 +12,6 @@ end
 
 Factory.define :message do |msg|
   msg.sequence(:content) {|i| "message #{i}" }
-  msg.association :topic, :factory => :topic
-  msg.association :user, :factory => :user
+  msg.association :topic
+  msg.association :user
 end

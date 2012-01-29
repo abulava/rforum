@@ -26,7 +26,7 @@ Then /^I should see a "([^"]*)" link$/ do |topics_link|
   page.should have_link(topics_link, :href => topics_path)
 end
 
-When /^I am on the page showing a topic with the title "([^"]*)"$/ do |title|
+When /^I am on the "([^"]*)" topic page$/ do |title|
   topic = Topic.find_by_title(title)
   visit topic_path(topic)
 end
@@ -56,7 +56,7 @@ When /^I press "([^"]*)"$/ do |name|
   click_button(name)
 end
 
-Then /^I should be on the page showing a topic with the title "([^"]*)"$/ do |title|
+Then /^I should be on the "([^"]*)" topic page$/ do |title|
   topic = Topic.find_by_title(title)
   current_path.should == topic_path(topic)
 end
