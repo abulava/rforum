@@ -9,7 +9,7 @@ class MessagesController < ApplicationController
   def create
     @topic = Topic.find(params[:topic_id])
     @message = @topic.messages.build(params[:message])
-    @message.user = User.first # @wip
+    @message.user = current_user
     if @message.save
       redirect_to topic_path(@topic)
     else
@@ -18,5 +18,9 @@ class MessagesController < ApplicationController
   end
 
   def destroy
+    @message = current_user.messages.find params[:id]
+    @message.destroy
+    flash[:notice] = 'Message destroyed.'
+    redirect_to topic_path(@message.topic)
   end
 end

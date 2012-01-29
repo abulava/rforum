@@ -48,14 +48,6 @@ Given /^I am signed\-in as a user "([^"]*)"$/ do |user_name|
   click_button('Sign in')
 end
 
-Given /^I fill in "([^"]*)" with "([^"]*)"$/ do |field, value|
-  fill_in(field, :with => value)
-end
-
-When /^I press "([^"]*)"$/ do |name|
-  click_button(name)
-end
-
 Then /^I should be on the "([^"]*)" topic page$/ do |title|
   topic = Topic.find_by_title(title)
   current_path.should == topic_path(topic)
@@ -70,10 +62,45 @@ Then /^I should be on the new message page in a topic titled "([^"]*)"$/ do |tit
   current_path.should == topic_messages_path(topic)
 end
 
-Then /^I shoud see an error explanation "([^"]*)"$/ do |error|
+Then /^I should see an error explanation "([^"]*)"$/ do |error|
   find('#error_explanation').find('ul').should have_content(error)
 end
 
 Then /^I should see a value "([^"]*)" in a field "([^"]*)"$/ do |value, field|
   find_field(field).value.should == value
+end
+
+When /^I am posted a message containing "([^"]*)"$/ do |message_content|
+  click_link('Post reply')
+  fill_in('Content', :with => message_content)
+  click_button('Submit')
+end
+
+Then /^I should see a message "([^"]*)" posted by a user "([^"]*)"$/ do |message_content, user_name|
+  page.should have_content(message_content)
+  page.should have_content("Posted by #{user_name}")
+end
+
+Then /^I should not see a message "([^"]*)" posted by a user "([^"]*)"$/ do |message_content, user_name|
+  page.should_not have_content(message_content)
+  page.should_not have_content("Posted by #{user_name}")
+end
+
+Then /^I cannot delete "([^"]*)" message$/ do |content|
+  message = Message.find_by_content content
+  page.should have_content(message.content)
+  within ".messages #message_#{message.id}" do
+    page.should_not have_link('Delete message')
+  end
+end
+
+Then /^I delete "([^"]*)" message with a notification message "([^"]*)"$/ do |content, flash_message|
+  message = Message.find_by_content content
+  page.should have_content(message.content)
+  within ".messages #message_#{message.id}" do
+    click_on "Delete message"
+  end
+  page.should have_content(flash_message)
+  visit topic_path(message.topic)
+  page.should_not have_content(content)
 end

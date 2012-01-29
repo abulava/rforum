@@ -10,17 +10,24 @@ Scenario: Adding a message on topic
     | message 1 | Title: count to 2 |
   And I am signed-in as a user "John"
   And I am on the "BDD" topic page
-  And I follow "Post reply"
-  And I fill in "Content" with "true"
-  When I press "Submit"
+  When I am posted a message containing "true"
   Then a message containing "true" should be in a topic titled "BDD"
   And I should be on the "BDD" topic page
   Given I am on the "count to 2" topic page
-  And I follow "Post reply"
-  And I fill in "Content" with "message 2"
-  When I press "Submit"
+  When I am posted a message containing "message 2"
   Then a message containing "message 2" should be in a topic titled "count to 2"
   Then I should be on the "count to 2" topic page
+
+Scenario: Adding messages by different users
+  Given the following messages exist:
+    | Content     | User       | Topic      |
+    | by 1st user | Name: Jill | Title: BDD |
+  And I am signed-in as a user "John"
+  When I am on the "BDD" topic page
+  Then I should see a message "by 1st user" posted by a user "Jill"
+  And I should not see a message "by 2nd user" posted by a user "John"
+  When I am posted a message containing "by 2nd user"
+  Then I should see a message "by 2nd user" posted by a user "John"
 
 Scenario: Failing to add an invalid message
   Given the following topic exists:
@@ -28,9 +35,20 @@ Scenario: Failing to add an invalid message
    | validate   |
   And I am signed-in as a user "John"
   And I am on the "validate" topic page
-  And I follow "Post reply"
-  And I fill in "Content" with "no"
-  When I press "Submit"
+  When I am posted a message containing "no"
   Then I should be on the new message page in a topic titled "validate"
-  And I shoud see an error explanation "Content is too short"
+  And I should see an error explanation "Content is too short"
   And I should see a value "no" in a field "Content"
+
+Scenario: A user is able to delete only own messages
+  Given I am signed-in as a user "John"
+  And the following user exist:
+    | name |
+    | Jill |
+  And the following messages exist:
+    | Content          | Topic      | User       |
+    | forbidden        | Title: BDD | name: Jill |
+    | could be deleted | Title: BDD | name: John |
+  When I am on the "BDD" topic page
+  Then I cannot delete "forbidden" message
+  And I delete "could be deleted" message with a notification message "destroyed"
