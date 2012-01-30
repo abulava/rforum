@@ -8,6 +8,7 @@ end
 
 Factory.define :topic do |topic|
   topic.title 'Making BDD fun!'
+  topic.association :user
 end
 
 Factory.define :message do |msg|

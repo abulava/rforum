@@ -6,8 +6,14 @@
 #  title      :string(255)
 #  created_at :datetime
 #  updated_at :datetime
+#  user_id    :integer
 #
 
 class Topic < ActiveRecord::Base
+  attr_accessible :title
+
+  belongs_to :user
   has_many :messages
+
+  validates_presence_of :user_id
 end

@@ -132,5 +132,7 @@ describe User do
 
   end
 
+  it { should have_many(:topics) }
+
   it { should have_many(:messages) }
 end

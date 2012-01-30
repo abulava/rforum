@@ -4,9 +4,11 @@
       <h1>
         <%= @topic.title %>
       </h1>
+      <%= will_paginate @messages %>
       <table class="messages" summary="Topic messages">
         <%= render @messages %>
       </table>
+      <%= will_paginate @messages %>
     </td>
   </tr>
 </table>
