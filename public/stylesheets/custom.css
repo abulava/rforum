@@ -280,7 +280,7 @@ table.messages tr td.message span.timestamp {
   color: #666;
 }
 
-ul.topicmenu {
+ul.topic_menu {
   list-style: none;     
   border-top: 1px solid #ccc;
   margin: 0 0 2em;
@@ -288,11 +288,11 @@ ul.topicmenu {
   float: left;
 }
 
-ul.topicmenu li {
+ul.topic_menu li {
   display: inline;  
 }
 
-ul.topicmenu li a {
+ul.topic_menu li a {
   padding: 0 5px;
 }
 

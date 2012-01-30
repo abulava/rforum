@@ -104,3 +104,41 @@ Then /^I delete "([^"]*)" message with a notification message "([^"]*)"$/ do |co
   visit topic_path(message.topic)
   page.should_not have_content(content)
 end
+
+Then /^I add a "([^"]*)" topic with a notification message "([^"]*)"$/ do |topic_title, flash_message|
+  within ".topics" do
+   page.should_not have_content(topic_title)
+  end
+  within "header nav" do
+    click_on "Add topic"
+  end
+  current_path.should == new_topic_path
+  fill_in('Title', :with => topic_title)
+  click_button('Submit')
+  current_path.should == root_path
+  within "#flash_notice" do
+    page.should have_content(flash_message)
+  end
+  within ".topics" do
+    page.should have_content(topic_title)
+  end
+end
+
+Then /^I should not add a topic with a too short title$/ do
+  visit root_path
+  within ".topics" do
+    page.should_not have_content("1")
+  end
+
+  within "header nav" do
+    click_on "Add topic"
+  end
+  current_path.should == new_topic_path
+  fill_in('Title', :with => "1")
+  click_button('Submit')
+
+  current_path.should == topics_path
+  within "form#new_topic" do
+    page.should have_content("1")
+  end
+end

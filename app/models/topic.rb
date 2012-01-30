@@ -16,4 +16,5 @@ class Topic < ActiveRecord::Base
   has_many :messages
 
   validates_presence_of :user_id
+  validates :title, :length => { :minimum => 3, :maximum => 140 }
 end

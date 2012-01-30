@@ -38,4 +38,16 @@ describe Topic do
 
     topic.messages.should == [msg2, msg1]
   end
+
+  describe "validations" do
+    before(:each) do
+      @topic = @user.topics.new(@attr)
+    end
+
+    subject { @topic }
+
+    it { should ensure_length_of(:title).
+                  is_at_least(3).
+                  is_at_most(140) }
+  end
 end

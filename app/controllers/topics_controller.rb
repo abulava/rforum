@@ -2,11 +2,17 @@ class TopicsController < ApplicationController
   before_filter :authenticate_user!, :except => [:show, :index]
 
   def new
-    render :text => "'New' stub"
+    @topic = current_user.topics.new
   end
   
   def create
-    render :text => "'Create' stub"
+    @topic = current_user.topics.build(params[:topic])
+    if @topic.save
+      flash[:notice] = 'Topic created.'
+      redirect_to root_path
+    else
+      render 'new'
+    end
   end
 
   def index

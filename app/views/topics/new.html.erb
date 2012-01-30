@@ -1,0 +1,10 @@
+<h2>Create a new topic</h2>
+<%= form_for @topic do |f| %>
+  <%= render 'shared/form_messages', :object => f.object %>
+
+  <div><%= f.label :title %> <i>(3 chars minimum, 140 chars maximum)</i><br />
+  <%= f.text_field :title %></div>
+  <div class="actions">
+    <%= f.submit "Submit" %>
+  </div>
+<% end %>
