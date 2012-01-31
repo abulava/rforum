@@ -1,7 +1,7 @@
 <tr>
   <td class="topic">
     <span class="timestamp">
-      Updated <%= topic.messages.empty? ? topic.created_at : time_ago_in_words(topic.messages.first.created_at) %> ago.
+      <%= link_to 'Last message', topic_path(topic, :page => topic.messages.total_pages) %> <%= topic.messages.empty? ? topic.created_at : time_ago_in_words(topic.messages.first.created_at) %> ago.
     </span><br />
     <%= link_to topic.title, topic %>
   </td>

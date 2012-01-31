@@ -21,13 +21,14 @@ class TopicsController < ApplicationController
   def index
     @topics = Topic.find(:all,
                          :include => :messages,
-                         :order => "messages.created_at DESC")
+                         :order   => "messages.created_at DESC")
                     .paginate(:page => params[:page], :per_page => 10)
   end
 
   def show
     @topic = Topic.find(params[:id])
-    @messages = @topic.messages.paginate(:page => params[:page], :per_page => 5)
+    @messages = @topic.messages.paginate(:page     => params[:page],
+                                         :per_page => Message.per_page)
     @title = @topic.title
   end
 

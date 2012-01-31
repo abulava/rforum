@@ -31,12 +31,32 @@ describe Topic do
 
   it { should validate_presence_of(:user_id) }
 
-  it "should have the right messages in the right order" do
-    topic = @user.topics.create!(@attr)
-    msg1 = Factory(:message, :topic => topic, :created_at => 1.hour.ago)
-    msg2 = Factory(:message, :topic => topic, :created_at => 1.day.ago)
+  describe "message association" do
+    before(:each) do
+      @topic = @user.topics.create!(@attr)
+    end
 
-    topic.messages.should == [msg2, msg1]
+    it "should have the right messages in the right order" do
+      msg1 = Factory(:message, :topic => @topic, :created_at => 1.hour.ago)
+      msg2 = Factory(:message, :topic => @topic, :created_at => 1.day.ago)
+
+      @topic.messages.should == [msg2, msg1]
+    end
+
+    it "should return proper messages.total_pages" do
+      @topic.messages.total_pages.should == 0
+
+      Factory(:message, :topic => @topic)
+      @topic.messages.total_pages.should == 1
+
+      (Message.per_page-1).times do 
+        Factory(:message, :topic => @topic)
+      end
+      @topic.messages.total_pages.should == 1
+
+      Factory(:message, :topic => @topic)
+      @topic.messages.total_pages.should == 2
+    end
   end
 
   describe "validations" do

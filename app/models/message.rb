@@ -20,4 +20,6 @@ class Message < ActiveRecord::Base
   validates :content, :length => { :minimum => 3, :maximum => 1000 }
 
   default_scope :order => 'messages.created_at ASC'
+
+  self.per_page = 5
 end
