@@ -40,11 +40,12 @@ Then /^I should not see a message with the content "([^"]*)"$/ do |content|
 end
 
 Given /^I am signed\-in as a user "([^"]*)"$/ do |user_name|
-  user = Factory(:user, :name => user_name)
+  user = User.find_by_name(user_name)
+
   visit root_path
   click_link('Login')
   fill_in('Email', :with => user.email)
-  fill_in('Password', :with => user.password)
+  fill_in('Password', :with => 'please')
   click_button('Sign in')
 end
 

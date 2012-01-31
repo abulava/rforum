@@ -1,7 +1,7 @@
 <tr>
   <td class="message" id='<%= dom_id message %>'>
     <span class="message_menu">
-      <% if current_user && current_user == message.user %>
+      <% if current_user && (current_user == message.user || current_user.admin?) %>
         <%= link_to "Delete message", [message.topic, message], :method => :delete %>
       <% end %>
     </span>

@@ -19,7 +19,11 @@ class MessagesController < ApplicationController
   end
 
   def destroy
-    @message = current_user.messages.find params[:id]
+    if current_user.admin?
+      @message = Message.find params[:id]
+    else
+      @message = current_user.messages.find params[:id]
+    end
     @message.destroy
     flash[:notice] = 'Message destroyed.'
     redirect_to topic_path(@message.topic)

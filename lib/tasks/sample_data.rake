@@ -3,10 +3,21 @@ namespace :db do
   task :populate => :environment do
     Rake::Task['db:reset'].invoke
 
-    user = User.create!(:name => 'First User',
-                        :email => 'user@example.com',
-                        :password => 'please',
-                        :password_confirmation => 'please')
+    user_attr = {
+                 :password => 'please',
+                 :password_confirmation => 'please'
+                }
+
+    admin = User.create!(user_attr.merge(
+                         :name => 'Admin User',
+                         :email => 'admin@example.com'
+                        ))
+    admin.toggle!(:admin)
+
+    user = User.create!(user_attr.merge(
+                        :name => 'Test User',
+                        :email => 'user@example.com'
+                       ))
 
     25.times do |n|
       fake = Faker::Lorem.sentence(4)
