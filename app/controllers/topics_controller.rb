@@ -3,10 +3,14 @@ class TopicsController < ApplicationController
 
   def new
     @topic = current_user.topics.new
+    @topic.messages.build
   end
   
   def create
     @topic = current_user.topics.build(params[:topic])
+    @topic.messages[0].user = current_user
+#    @message.user = current_user
+#    @message.save!
     if @topic.save
       flash[:notice] = 'Topic created.'
       redirect_to root_path

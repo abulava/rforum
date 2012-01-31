@@ -97,21 +97,6 @@ header ul.usermenu li a {
   padding: 0 5px;
 }
 
-/* Sign up button */
-
-a.signup_button {
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-  text-align: center;
-  width: 190px;
-  color: #fff;
-  background: #006400;
-  font-size: 150%;
-  font-weight: bold;
-  padding: 20px;
-}
-
 /* Round corners */
 
 .round {
@@ -296,12 +281,9 @@ ul.topic_menu li a {
   padding: 0 5px;
 }
 
-.message_content {
-  align: center;
-}
-
-#message_content {
+.message_content textarea {
   width: 655px;
+  height: 250px;
 }
 
 div.user_info img {
@@ -318,13 +300,4 @@ div.user_info span.user_name {
 
 div.user_info span.topics {
   font-size: 80%;
-}
-
-form.new_topic {
-  margin-bottom: 2em;
-}
-
-form.new_topic textarea {
-  height: 4em;
-  margin-bottom: 0;
 }

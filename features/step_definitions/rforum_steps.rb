@@ -54,7 +54,13 @@ Then /^I should be on the "([^"]*)" topic page$/ do |title|
 end
 
 Then /^a message containing "([^"]*)" should be in a topic titled "([^"]*)"$/ do |message_content, topic_title|
-  Message.find_by_content(message_content).topic.title.should == topic_title
+  topic = Topic.find_by_title(topic_title)
+  message = Message.find_by_content(message_content)
+
+  visit topic_path(topic)
+  within ".messages #message_#{message.id}" do
+    page.should have_content(message_content)
+  end
 end
 
 Then /^I should be on the new message page in a topic titled "([^"]*)"$/ do |title|
@@ -105,22 +111,28 @@ Then /^I delete "([^"]*)" message with a notification message "([^"]*)"$/ do |co
   page.should_not have_content(content)
 end
 
-Then /^I add a "([^"]*)" topic with a notification message "([^"]*)"$/ do |topic_title, flash_message|
+Then /^I add a "([^"]*)" topic with a "([^"]*)" message$/ do |topic_title, message_content|
   within ".topics" do
    page.should_not have_content(topic_title)
   end
+
   within "header nav" do
     click_on "Add topic"
   end
   current_path.should == new_topic_path
   fill_in('Title', :with => topic_title)
+  fill_in('Content', :with => message_content)
   click_button('Submit')
+
   current_path.should == root_path
-  within "#flash_notice" do
-    page.should have_content(flash_message)
-  end
   within ".topics" do
     page.should have_content(topic_title)
+  end
+end
+
+Then /^I should see a notification message "([^"]*)"$/ do |flash_message|
+  within "#flash_notice" do
+    page.should have_content(flash_message)
   end
 end
 
