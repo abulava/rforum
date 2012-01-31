@@ -16,7 +16,6 @@ class Message < ActiveRecord::Base
   belongs_to :topic
   belongs_to :user
 
-#  validates_presence_of :topic_id
   validates_presence_of :user_id
   validates :content, :length => { :minimum => 3, :maximum => 1000 }
 
