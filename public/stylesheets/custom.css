@@ -233,13 +233,6 @@ table.topics tr td.topic {
   vertical-align: top;
   padding-top: 10px;
 }
-
-table.topics tr td.topic span.timestamp {
-  display: block;
-  font-size: 85%;
-  color: #666;
-}
-
 table.topic {
   border-top: 1px solid #ccc;
 }
@@ -258,7 +251,7 @@ table.messages tr td.message {
   padding-top: 10px;
 }
 
-table.messages tr td.message span.timestamp {
+table tr td span.timestamp {
   display: block;
   float: right;
   font-size: 85%;

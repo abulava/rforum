@@ -11,11 +11,17 @@ namespace :db do
     25.times do |n|
       fake = Faker::Lorem.sentence(4)
       title = "Topic #{n+1}: #{fake}"
-      Topic.create!(:title => title)
+      topic = user.topics.build(:title => title)
+      topic.save!
+
+      msg = topic.messages.build(:content => "Starting topic #{n+1}.")
+      msg.user = user
+      msg.update_attribute :created_at, 4321.minutes.ago
+      msg.save!
     end
 
     Topic.all(:limit => 6).each do |topic|
-      (1 + rand(9)).times do
+      (1 + rand(8)).times do
         msg = topic.messages.build(:content => Faker::Lorem.paragraph(1 + rand(3)))
         msg.user = user
         msg.update_attribute :created_at, rand(4320).minutes.ago

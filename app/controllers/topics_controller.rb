@@ -19,7 +19,10 @@ class TopicsController < ApplicationController
   end
 
   def index
-    @topics = Topic.paginate(:page => params[:page], :per_page => 10)
+    @topics = Topic.find(:all,
+                         :include => :messages,
+                         :order => "messages.created_at DESC")
+                    .paginate(:page => params[:page], :per_page => 10)
   end
 
   def show

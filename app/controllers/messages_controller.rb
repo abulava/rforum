@@ -11,6 +11,7 @@ class MessagesController < ApplicationController
     @message = @topic.messages.build(params[:message])
     @message.user = current_user
     if @message.save
+      flash[:notice] = 'Message created.'
       redirect_to topic_path(@topic)
     else
       render 'new'
