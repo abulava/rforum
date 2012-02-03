@@ -2,7 +2,7 @@
   <td class="message" id='<%= dom_id message %>'>
     <span class="message_menu">
       <% if current_user && (current_user == message.user || current_user.admin?) %>
-        <%= link_to "Delete message", [message.topic, message], :method => :delete %>
+        <%= link_to "Delete message", topic_message_path(message.topic, message, :page => params[:page]), :method => :delete %>
       <% end %>
     </span>
     <span class="timestamp">

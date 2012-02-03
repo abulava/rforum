@@ -4,6 +4,9 @@ class MessagesController < ApplicationController
   def new
     @topic = Topic.find(params[:topic_id])
     @message = @topic.messages.new
+    3.times do
+      @message.attaches.build
+    end
   end
 
   def create
@@ -12,7 +15,7 @@ class MessagesController < ApplicationController
     @message.user = current_user
     if @message.save
       flash[:notice] = 'Message created.'
-      redirect_to topic_path(@topic)
+      redirect_to topic_path(@topic, :page => @topic.messages.total_pages)
     else
       render 'new'
     end
@@ -26,6 +29,8 @@ class MessagesController < ApplicationController
     end
     @message.destroy
     flash[:notice] = 'Message destroyed.'
-    redirect_to topic_path(@message.topic)
+
+    redirect_page = [params[:page].to_i,@message.topic.messages.total_pages].min.nonzero?
+    redirect_to topic_path(@message.topic, :page => redirect_page)
   end
 end

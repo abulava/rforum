@@ -1,5 +1,5 @@
 <h2>Reply to the topic</h2>
-<%= form_for([@topic, @message]) do |f| %>
+<%= form_for [@topic, @message], :html => { :multipart => true } do |f| %>
   <%= render 'shared/form_messages', :object => f.object %>
 
   <div class="message_content">
@@ -7,6 +7,11 @@
     <%= f.text_area :content %>
   </div>
   <i>(3 chars minimum, 1000 chars maximum)</i>
+  <br /><br />
+  <%= f.fields_for :attaches do |a| %>
+    <div>Attach: <%= a.file_field :data %><br />
+    </div>
+  <% end %>
   <div class="actions">
     <%= f.submit "Submit" %>
   </div>

@@ -11,10 +11,14 @@
 #
 
 class Message < ActiveRecord::Base
-  attr_accessible :content
+  attr_accessible :content, :attaches_attributes
 
   belongs_to :topic
   belongs_to :user
+
+  has_many :attaches, :dependent => :destroy
+
+  accepts_nested_attributes_for :attaches
 
   validates_presence_of :user_id
   validates :content, :length => { :minimum => 3, :maximum => 1000 }

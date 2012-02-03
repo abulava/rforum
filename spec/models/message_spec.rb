@@ -37,6 +37,8 @@ describe Message do
 
   it { should validate_presence_of(:user_id) }
 
+  it { should have_many(:attaches) }
+
   describe "validations of a new instance belonging to a topic" do
     before(:each) do
       @message = @topic.messages.new(@attr)
