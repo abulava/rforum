@@ -23,5 +23,6 @@ group :test do
   gem 'database_cleaner', '0.7.1'
   gem 'launchy', '2.0.5'
   gem 'escape_utils', '0.2.4'
+  gem 'paperclip', '2.5.2'
 end
 

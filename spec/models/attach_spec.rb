@@ -17,5 +17,7 @@ require 'spec_helper'
 describe Attach do
   it { should belong_to(:message) }
 
-#  it { should have_attached_file(:data) }
+  it { should have_attached_file(:data) }
+
+  it { should validate_attachment_size(:data).less_than 1.megabyte }
 end

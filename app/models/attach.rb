@@ -16,4 +16,6 @@ class Attach < ActiveRecord::Base
   belongs_to :message
   
   has_attached_file :data
+
+  validates_attachment_size :data, :less_than => 1.megabyte
 end
