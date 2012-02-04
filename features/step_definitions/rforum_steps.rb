@@ -194,3 +194,34 @@ Then /^I should not add a topic with a too short title$/ do
     Then I should not see "#{short_title}" listed in a topic list
   }
 end
+
+Given /^(\d+) messages exist in a "([^"]*)" topic$/ do |total_messages, topic_name|
+  topic = Topic.find_by_title(topic_name)
+  topic.should_not be_blank
+
+  total_messages.to_i.times do |n|
+    Factory(:message, :topic_id => topic.id, :content => "message #{n+1}")
+  end
+end
+
+Then /^I should see (\d+) messages per page on a topic "([^"]*)"$/ do |test_per_page, topic_title|
+  normal_per_page = Message.per_page
+  Message.per_page = test_per_page
+
+  steps %Q{
+    When I am on the "#{topic_title}" topic page
+    Then I should see a message with the content "message 1"
+    And I should see a message with the content "message #{test_per_page}"
+    And I should not see a message with the content "message #{test_per_page.next}"
+  }
+
+  within ".pagination" do
+    click_on "Next"
+  end
+
+  steps %Q{
+    Then I should see a message with the content "message #{test_per_page.next}"
+  }
+
+  Message.per_page = normal_per_page
+end

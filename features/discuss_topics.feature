@@ -20,13 +20,9 @@ Scenario: Adding a message on topic
   And a message containing "pants" should be in a topic titled "wear"
 
 Scenario: Adding messages by different users
-  Given the following users exist:
-    | Name |
-    | Jill |
-    | John |
-  And the following topic exists:
-    | Title      |
-    | BDD        |
+  Given a user exists with a name of "Jill"
+  And a user exists with a name of "John"
+  And a topic exists with a title of "BDD"
   And I am signed-in as a user "John"
   When I am on the "BDD" topic page
   And I post a message containing "John writes"
@@ -39,9 +35,7 @@ Scenario: Adding messages by different users
 
 Scenario: Failing to add an invalid message
   Given a user exists
-  And the following topic exists:
-    | Title      |
-    | validate   |
+  And a topic exists with a title of "validate"
   And I am signed-in as a user
   And I am on the "validate" topic page
   Then I should not add an invalid message in a topic titled "validate"
@@ -50,6 +44,8 @@ Scenario: A user is able to delete only own messages
   Given the following messages exist:
     | Content          | Topic      | User       |
     | forbidden        | Title: BDD | Name: Jill |
+    | forbidde1        | Title: BDD | Name: Jill |
+    | forbidde2        | Title: BDD | Name: Jill |
     | could be deleted | Title: BDD | Name: John |
   And I am signed-in as a user "John"
   When I am on the "BDD" topic page
