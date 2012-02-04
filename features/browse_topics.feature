@@ -4,26 +4,18 @@ Feature: Browse topics
   I want to choose a topic from a topic list and read it
 
 Scenario: Browsing a list of topics
-  Given the following user exists:
-    | Name |
-    | user |
-  And the following topics exist:
+  Given the following topics exist:
     | Title        |
-    | disscus this |
+    | discuss this |
     | no, this!    | 
   When I am on the home page
-  Then I should see "disscus this" listed in a topic list
+  Then I should see "discuss this" listed in a topic list
   And I should see "no, this!" listed in a topic list
 
 Scenario: Reading a topic
-  Given the following user exists:
-    | Name |
-    | user |
-  And the following topic exists:
+  Given the following topic exists:
     | Title   |
     | foo bar |
   When I am on the home page
-  And I follow "foo bar"
-  Then I should see "foo bar" in a page body
-  And I should see "foo bar" in a page title
-  And I should see a "Home" link
+  And I follow "foo bar" in a topic list
+  Then I should be on the "foo bar" topic page

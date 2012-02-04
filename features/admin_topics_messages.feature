@@ -14,5 +14,5 @@ Scenario: An admin is able to delete any messages
     | as an admin | Title: BDD | Name: John |
   And I am signed-in as a user "Jill"
   When I am on the "BDD" topic page
-  Then I delete "as an owner" message with a notification message "destroyed"
-  And I delete "as an admin" message with a notification message "destroyed"
+  Then I delete "as an owner" message with a flash notification "destroyed"
+  And I delete "as an admin" message with a flash notification "destroyed"

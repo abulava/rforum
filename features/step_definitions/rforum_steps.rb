@@ -1,29 +1,23 @@
-Given /^a topic with the title "([^"]*)"$/ do |title|
-  Topic.create!(:title => title)
-end
-
 When /^I am on the home page$/ do
   visit root_path
 end
 
 Then /^I should see "([^"]*)" listed in a topic list$/ do |title|
-  page.should have_selector("table.topics tr td", :text => title)
+  within "table.topics" do
+    page.should have_content(title)
+  end
 end
 
-When /^I follow "([^"]*)"$/ do |title|
-  click_link(title)
+Then /^I should not see "([^"]*)" listed in a topic list$/ do |title|
+  within "table.topics" do
+    page.should_not have_content(title)
+  end
 end
 
-Then /^I should see "([^"]*)" in a page body$/ do |title|
-  page.should have_selector("table.topic h1", :text => title)
-end
-
-Then /^I should see "([^"]*)" in a page title$/ do |title|
-  page.should have_selector("title", :text => title)
-end
-
-Then /^I should see a "([^"]*)" link$/ do |topics_link|
-  page.should have_link(topics_link, :href => topics_path)
+When /^I follow "([^"]*)" in a topic list$/ do |title|
+  within "table.topics" do
+    click_link(title)
+  end
 end
 
 When /^I am on the "([^"]*)" topic page$/ do |title|
@@ -32,15 +26,20 @@ When /^I am on the "([^"]*)" topic page$/ do |title|
 end
 
 Then /^I should see a message with the content "([^"]*)"$/ do |content|
-  page.should have_content(content)
+  within ".messages" do
+    page.should have_content(content)
+  end
 end
 
 Then /^I should not see a message with the content "([^"]*)"$/ do |content|
-  page.should_not have_content(content)
+  within ".messages" do
+    page.should_not have_content(content)
+  end
 end
 
 Given /^I am signed\-in as a user "([^"]*)"$/ do |user_name|
   user = User.find_by_name(user_name)
+  user.should_not be_blank
 
   visit root_path
   click_link('Login')
@@ -49,24 +48,37 @@ Given /^I am signed\-in as a user "([^"]*)"$/ do |user_name|
   click_button('Sign in')
 end
 
+Given /^I am signed\-in as a user$/ do
+  user = User.first
+  user.should_not be_blank
+
+  steps %Q{
+    Given I am signed-in as a user "#{user.name}"
+  }
+end
+
+Given /^I am signed\-out$/ do
+  visit destroy_user_session_path
+end
+
 Then /^I should be on the "([^"]*)" topic page$/ do |title|
+  within "title" do
+    page.should have_content(title)
+  end
+
+  within "table.topic h1" do
+    page.should have_content(title)
+  end
+
   topic = Topic.find_by_title(title)
   current_path.should == topic_path(topic)
 end
 
 Then /^a message containing "([^"]*)" should be in a topic titled "([^"]*)"$/ do |message_content, topic_title|
-  topic = Topic.find_by_title(topic_title)
-  message = Message.find_by_content(message_content)
-
-  visit topic_path(topic)
-  within ".messages #message_#{message.id}" do
-    page.should have_content(message_content)
-  end
-end
-
-Then /^I should be on the new message page in a topic titled "([^"]*)"$/ do |title|
-  topic = Topic.find_by_title(title)
-  current_path.should == topic_messages_path(topic)
+  steps %Q{
+    When I am on the "#{topic_title}" topic page
+    Then I should see a message with the content "#{message_content}"
+  }
 end
 
 Then /^I should see an error explanation "([^"]*)"$/ do |error|
@@ -77,20 +89,40 @@ Then /^I should see a value "([^"]*)" in a field "([^"]*)"$/ do |value, field|
   find_field(field).value.should == value
 end
 
-When /^I am posted a message containing "([^"]*)"$/ do |message_content|
+When /^I post a message containing "([^"]*)"$/ do |message_content|
   click_link('Post reply')
   fill_in('Content', :with => message_content)
   click_button('Submit')
 end
 
 Then /^I should see a message "([^"]*)" posted by a user "([^"]*)"$/ do |message_content, user_name|
-  page.should have_content(message_content)
-  page.should have_content("Posted by #{user_name}")
+  message = Message.find_by_content(message_content)
+  within ".messages #message_#{message.id}" do
+    page.should have_content(message_content)
+    page.should have_content("Posted by #{user_name}")
+  end
 end
 
-Then /^I should not see a message "([^"]*)" posted by a user "([^"]*)"$/ do |message_content, user_name|
-  page.should_not have_content(message_content)
-  page.should_not have_content("Posted by #{user_name}")
+Then /^I should not add an invalid message in a topic titled "([^"]*)"$/ do |topic_title|
+  short_content = "no"
+
+  steps %Q{
+    When I am on the "#{topic_title}" topic page
+    And I post a message containing "#{short_content}"
+    Then I should see an error explanation "Content is too short"
+  }
+
+  topic = Topic.find_by_title(topic_title)
+  current_path.should == topic_messages_path(topic)
+
+  within "form#new_message" do
+    page.should have_content(short_content)
+  end
+
+  steps %Q{
+    When I am on the "#{topic_title}" topic page
+    Then I should not see a message with the content "#{short_content}"
+  }
 end
 
 Then /^I cannot delete "([^"]*)" message$/ do |content|
@@ -101,15 +133,18 @@ Then /^I cannot delete "([^"]*)" message$/ do |content|
   end
 end
 
-Then /^I delete "([^"]*)" message with a notification message "([^"]*)"$/ do |content, flash_message|
+Then /^I delete "([^"]*)" message with a flash notification "([^"]*)"$/ do |content, flash_message|
   message = Message.find_by_content content
   page.should have_content(message.content)
   within ".messages #message_#{message.id}" do
     click_on "Delete message"
   end
-  page.should have_content(flash_message)
-  visit topic_path(message.topic)
-  page.should_not have_content(content)
+
+  steps %Q{
+    Then I should see a notification message "#{flash_message}"
+    When I am on the "#{message.topic.title}" topic page
+    Then I should not see a message with the content "#{content}"
+  }
 end
 
 Then /^I add a "([^"]*)" topic with a "([^"]*)" message$/ do |topic_title, message_content|
@@ -125,10 +160,12 @@ Then /^I add a "([^"]*)" topic with a "([^"]*)" message$/ do |topic_title, messa
   fill_in('Content', :with => message_content)
   click_button('Submit')
 
-  current_path.should == root_path
-  within ".topics" do
-    page.should have_content(topic_title)
-  end
+  steps %Q{
+    Then I should see a notification message "created"
+    When I am on the home page
+    Then I should see "#{topic_title}" listed in a topic list
+    And a message containing "starting" should be in a topic titled "something new"
+  }
 end
 
 Then /^I should see a notification message "([^"]*)"$/ do |flash_message|
@@ -138,20 +175,22 @@ Then /^I should see a notification message "([^"]*)"$/ do |flash_message|
 end
 
 Then /^I should not add a topic with a too short title$/ do
-  visit root_path
-  within ".topics" do
-    page.should_not have_content("1")
-  end
+  short_title = "1"
 
   within "header nav" do
     click_on "Add topic"
   end
   current_path.should == new_topic_path
-  fill_in('Title', :with => "1")
+  fill_in('Title', :with => short_title)
   click_button('Submit')
 
   current_path.should == topics_path
   within "form#new_topic" do
-    page.should have_content("1")
+    page.should have_content(short_title)
   end
+  steps %Q{
+    Then I should see an error explanation "too short"
+    When I am on the home page
+    Then I should not see "#{short_title}" listed in a topic list
+  }
 end

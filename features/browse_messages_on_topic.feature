@@ -4,13 +4,10 @@ Feature: Browse messages on topic
   I want to be able to read the messages on topic
 
 Scenario: Browsing a single message on topic
-  Given the following topic exists:
-    | Title      |
-    | count to 1 |
-  And the following messages exist:
-    | Content   | Topic             |
-    | message 1 | Title: count to 1 |
-    | message 2 | Title: BDD        |
-  When I am on the "count to 1" topic page
-  Then I should see a message with the content "message 1"
-  And I should not see a message with the content "message 2"
+  Given the following messages exist:
+    | Content | Topic       |
+    | orange  | Title: food |
+    | shirt   | Title: wear |
+  When I am on the "food" topic page
+  Then I should see a message with the content "orange"
+  And I should not see a message with the content "shirt"

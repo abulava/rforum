@@ -4,18 +4,11 @@ Feature: Create topics
   I want to create topics
 
 Scenario: Creating a topic
-  Given the following user exists:
-    | Name |
-    | John |
-  And I am signed-in as a user "John"
+  Given a user exists
+  And I am signed-in as a user
   Then I add a "something new" topic with a "starting" message
-  And I should see a notification message "created"
-  And a message containing "starting" should be in a topic titled "something new"
 
 Scenario: Failing to add an invalid topic
-  Given the following user exists:
-    | Name |
-    | John |
-  And I am signed-in as a user "John"
+  Given a user exists
+  And I am signed-in as a user
   Then I should not add a topic with a too short title
-  And I should see an error explanation "too short"
