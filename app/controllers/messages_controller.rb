@@ -7,6 +7,8 @@ class MessagesController < ApplicationController
     3.times do
       @message.attaches.build
     end
+
+    @title = @topic.title
   end
 
   def create

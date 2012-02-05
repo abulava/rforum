@@ -89,8 +89,22 @@ Then /^I should see a value "([^"]*)" in a field "([^"]*)"$/ do |value, field|
   find_field(field).value.should == value
 end
 
-When /^I post a message containing "([^"]*)"$/ do |message_content|
+When /^I post a message containing "([^"]*)" to a topic titled "([^"]*)"$/ do |message_content, topic_title|
   click_link('Post reply')
+
+  topic = Topic.find_by_title(topic_title)
+  topic.should_not be_blank
+
+  current_path.should == new_topic_message_path(topic)
+
+  within "title" do
+    page.should have_content(topic_title)
+  end
+
+  within "section h2" do
+    page.should have_content(topic_title)
+  end
+
   fill_in('Content', :with => message_content)
   click_button('Submit')
 end
@@ -108,7 +122,7 @@ Then /^I should not add an invalid message in a topic titled "([^"]*)"$/ do |top
 
   steps %Q{
     When I am on the "#{topic_title}" topic page
-    And I post a message containing "#{short_content}"
+    And I post a message containing "#{short_content}" to a topic titled "#{topic_title}"
     Then I should see an error explanation "Content is too short"
   }
 

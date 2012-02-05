@@ -1,4 +1,4 @@
-<h2>Reply to the topic</h2>
+<h2>Reply to <%= "\"#{@topic.title}\"" %></h2>
 <%= form_for [@topic, @message], :html => { :multipart => true } do |f| %>
   <%= render 'shared/form_messages', :object => f.object %>
 

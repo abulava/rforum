@@ -59,6 +59,20 @@ describe Topic do
     end
   end
 
+  it "should return all topics ordered by the date of the last message" do
+      topic1 = @user.topics.create!(@attr.merge :title => "topic1")
+      Factory(:message, :topic => topic1, :created_at => 1.hour.ago)
+
+      topic2 = @user.topics.create!(@attr.merge :title => "topic2")
+      Factory(:message, :topic => topic2, :created_at => 1.day.ago)
+
+      Topic.all_by_last_message.should == [topic1, topic2]
+
+      Factory(:message, :topic => topic2, :created_at => 59.minutes.ago)
+
+      Topic.all_by_last_message.should == [topic2, topic1]
+  end
+
   describe "validations" do
     before(:each) do
       @topic = @user.topics.new(@attr)

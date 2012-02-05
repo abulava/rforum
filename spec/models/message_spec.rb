@@ -37,7 +37,7 @@ describe Message do
 
   it { should validate_presence_of(:user_id) }
 
-  it { should have_many(:attaches) }
+  it { should have_many(:attaches).dependent(:destroy) }
 
   describe "validations of a new instance belonging to a topic" do
     before(:each) do

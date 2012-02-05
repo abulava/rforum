@@ -11,11 +11,11 @@ Scenario: Adding a message on topic
     | shirt   | Title: wear |
   And I am signed-in as a user
   And I am on the "food" topic page
-  When I post a message containing "orange"
+  When I post a message containing "orange" to a topic titled "food"
   Then I should be on the "food" topic page
   And a message containing "orange" should be in a topic titled "food"
   Given I am on the "wear" topic page
-  When I post a message containing "pants"
+  When I post a message containing "pants" to a topic titled "wear"
   Then I should be on the "wear" topic page
   And a message containing "pants" should be in a topic titled "wear"
 
@@ -25,12 +25,12 @@ Scenario: Adding messages by different users
   And a topic exists with a title of "BDD"
   And I am signed-in as a user "John"
   When I am on the "BDD" topic page
-  And I post a message containing "John writes"
+  And I post a message containing "John writes" to a topic titled "BDD"
   Then I should see a message "John writes" posted by a user "John"
   Given I am signed-out
   And I am signed-in as a user "Jill"
   When I am on the "BDD" topic page
-  And I post a message containing "Jill writes"
+  And I post a message containing "Jill writes" to a topic titled "BDD"
   Then I should see a message "Jill writes" posted by a user "Jill"
 
 Scenario: Failing to add an invalid message
@@ -44,8 +44,6 @@ Scenario: A user is able to delete only own messages
   Given the following messages exist:
     | Content          | Topic      | User       |
     | forbidden        | Title: BDD | Name: Jill |
-    | forbidde1        | Title: BDD | Name: Jill |
-    | forbidde2        | Title: BDD | Name: Jill |
     | could be deleted | Title: BDD | Name: John |
   And I am signed-in as a user "John"
   When I am on the "BDD" topic page

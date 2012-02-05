@@ -23,4 +23,10 @@ class Topic < ActiveRecord::Base
   validates :title, :length => { :minimum => 3, :maximum => 140 }
 
   accepts_nested_attributes_for :messages
+
+  def self.all_by_last_message
+    self.find(:all,
+              :include => :messages,
+              :order   => "messages.created_at DESC")
+  end
 end
