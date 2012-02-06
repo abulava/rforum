@@ -49,3 +49,11 @@ Scenario: A user is able to delete only own messages
   When I am on the "BDD" topic page
   Then I cannot delete "forbidden" message
   And I delete "could be deleted" message with a flash notification "destroyed"
+
+Scenario: A user is unable to delete a last message in a topic
+  Given the following message exists:
+    | Content  | Topic      | User       |
+    | last one | Title: BDD | Name: John |
+  And I am signed-in as a user "John"
+  When I am on the "BDD" topic page
+  Then I cannot delete "last one" message

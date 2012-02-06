@@ -145,6 +145,12 @@ Then /^I cannot delete "([^"]*)" message$/ do |content|
   within ".messages #message_#{message.id}" do
     page.should_not have_link('Delete message')
   end
+  page.driver.delete topic_message_path(message.topic, message.id)
+
+  steps %Q{
+    When I am on the "#{message.topic.title}" topic page
+    Then I should see a message with the content "#{content}"
+  }
 end
 
 Then /^I delete "([^"]*)" message with a flash notification "([^"]*)"$/ do |content, flash_message|

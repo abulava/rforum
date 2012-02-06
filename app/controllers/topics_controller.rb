@@ -19,7 +19,7 @@ class TopicsController < ApplicationController
   end
 
   def index
-    @topics = Topic.all_by_last_message
+    @topics = Topic.all_by_newest_message
                    .paginate(:page => params[:page], :per_page => 10)
   end
 
@@ -28,6 +28,7 @@ class TopicsController < ApplicationController
     @messages = @topic.messages.paginate(:page     => params[:page],
                                          :per_page => Message.per_page)
     @title = @topic.title
+    @last_message = @topic.messages.last_message?
   end
 
   def destroy

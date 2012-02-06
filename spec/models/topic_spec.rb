@@ -57,20 +57,30 @@ describe Topic do
       Factory(:message, :topic => @topic)
       @topic.messages.total_pages.should == 2
     end
+
+    it "should respond to messages.last_message?" do
+      @topic.messages.last_message?.should be_false
+
+      Factory(:message, :topic => @topic)
+      @topic.messages.last_message?.should be_true
+
+      Factory(:message, :topic => @topic)
+      @topic.messages.last_message?.should be_false
+    end
   end
 
-  it "should return all topics ordered by the date of the last message" do
+  it "should return all topics ordered by the date of the newest message" do
       topic1 = @user.topics.create!(@attr.merge :title => "topic1")
       Factory(:message, :topic => topic1, :created_at => 1.hour.ago)
 
       topic2 = @user.topics.create!(@attr.merge :title => "topic2")
       Factory(:message, :topic => topic2, :created_at => 1.day.ago)
 
-      Topic.all_by_last_message.should == [topic1, topic2]
+      Topic.all_by_newest_message.should == [topic1, topic2]
 
       Factory(:message, :topic => topic2, :created_at => 59.minutes.ago)
 
-      Topic.all_by_last_message.should == [topic2, topic1]
+      Topic.all_by_newest_message.should == [topic2, topic1]
   end
 
   describe "validations" do

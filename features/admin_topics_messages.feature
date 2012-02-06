@@ -3,13 +3,14 @@ Feature: Administer messages and topics
   As an admin user
   I want to delete messages and topics
 
-Scenario: An admin is able to delete any messages
+Scenario: An admin is able to delete any user's messages
   Given the following users exist:
     | Name | admin |
     | John | false |
     | Jill | true  |
   And the following messages exist:
     | Content     | Topic      | User       |
+    | last msg    | Title:BDD  | Name: Jill |
     | as an owner | Title: BDD | Name: Jill |
     | as an admin | Title: BDD | Name: John |
   And I am signed-in as a user "Jill"

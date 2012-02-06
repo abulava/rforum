@@ -24,15 +24,25 @@ class MessagesController < ApplicationController
   end
 
   def destroy
+    @topic = Topic.find(params[:topic_id])
     if current_user.admin?
-      @message = Message.find params[:id]
+      @message = Message.find_by_id params[:id]
     else
-      @message = current_user.messages.find params[:id]
+      @message = current_user.messages.find_by_id params[:id]
     end
-    @message.destroy
-    flash[:notice] = 'Message destroyed.'
 
-    redirect_page = [params[:page].to_i,@message.topic.messages.total_pages].min.nonzero?
-    redirect_to topic_path(@message.topic, :page => redirect_page)
+    if @message
+      unless @topic.messages.last_message?
+        @message.destroy
+        flash[:notice] = 'Message destroyed.'
+      else
+        flash[:alert] = 'Last message in a topic can\'t be destroyed.'
+      end
+    else
+      flash[:alert] = 'Message not found.'
+    end
+
+    redirect_page = [params[:page].to_i,@topic.messages.total_pages].min.nonzero?
+    redirect_to topic_path(@topic, :page => redirect_page)
   end
 end

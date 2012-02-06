@@ -17,6 +17,10 @@ class Topic < ActiveRecord::Base
     def total_pages
       (self.count / Message.per_page.to_f).ceil
     end
+
+    def last_message?
+      self.count == 1
+    end
   end
 
   validates_presence_of :user_id
@@ -24,7 +28,7 @@ class Topic < ActiveRecord::Base
 
   accepts_nested_attributes_for :messages
 
-  def self.all_by_last_message
+  def self.all_by_newest_message
     self.find(:all,
               :include => :messages,
               :order   => "messages.created_at DESC")
