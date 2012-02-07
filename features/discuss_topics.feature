@@ -40,6 +40,14 @@ Scenario: Failing to add an invalid message
   And I am on the "validate" topic page
   Then I should not add an invalid message in a topic titled "validate"
 
+Scenario: Adding a message with attaches
+  Given a user exists
+  And a topic exists with a title of "BDD"
+  And I am signed-in as a user
+  When I am on the "BDD" topic page
+  And I post a message with attaches to a topic titled "BDD"
+  Then I should see a message with attaches in a topic titled "BDD"
+
 Scenario: A user is able to delete only own messages
   Given the following messages exist:
     | Content          | Topic      | User       |

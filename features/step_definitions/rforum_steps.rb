@@ -90,6 +90,37 @@ Then /^I should see a value "([^"]*)" in a field "([^"]*)"$/ do |value, field|
 end
 
 When /^I post a message containing "([^"]*)" to a topic titled "([^"]*)"$/ do |message_content, topic_title|
+  steps %Q{
+    When I visit a new message page in a topic titled "#{topic_title}"
+  }
+
+  fill_in('Content', :with => message_content)
+  click_button('Submit')
+end
+
+When /^I post a message with attaches to a topic titled "([^"]*)"$/ do |topic_title|
+  steps %Q{
+    When I visit a new message page in a topic titled "#{topic_title}"
+  }
+
+  fill_in('Content', :with => "with attaches")
+  attach_file('message_attaches_attributes_0_data',
+              File.join(Rails.root.to_s, 'features', 'upload_files', 'cucumber.jpg'))
+  click_button('Submit')
+end
+
+Then /^I should see a message with attaches in a topic titled "([^"]*)"$/ do |topic_title|
+  steps %Q{
+    When I am on the "#{topic_title}" topic page
+  }
+
+  message = Message.find_by_content("with attaches")
+  within ".messages #message_#{message.id} .attaches" do
+    page.should have_link ("cucumber.jpg")
+  end
+end
+
+When /^I visit a new message page in a topic titled "([^"]*)"$/ do |topic_title|
   click_link('Post reply')
 
   topic = Topic.find_by_title(topic_title)
@@ -104,9 +135,6 @@ When /^I post a message containing "([^"]*)" to a topic titled "([^"]*)"$/ do |m
   within "section h2" do
     page.should have_content(topic_title)
   end
-
-  fill_in('Content', :with => message_content)
-  click_button('Submit')
 end
 
 Then /^I should see a message "([^"]*)" posted by a user "([^"]*)"$/ do |message_content, user_name|

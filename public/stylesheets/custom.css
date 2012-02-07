@@ -274,9 +274,16 @@ ul.topic_menu li a {
   padding: 0 5px;
 }
 
+.message .content {
+  padding-top: 5px;
+}
 .message_content textarea {
   width: 655px;
   height: 250px;
+}
+
+div.attaches {
+  border-left: 1px solid #ccc;
 }
 
 div.user_info img {
