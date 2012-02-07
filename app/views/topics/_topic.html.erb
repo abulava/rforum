@@ -3,6 +3,7 @@
     <span class="topic_menu">
       <% if current_user && current_user.admin? %>
       <%= link_to "Delete topic", topic_path(topic, :page => params[:page]), :method => :delete %>
+      <%= link_to "Edit topic", edit_topic_path(topic, :page => params[:page]) %>
       <% end %>
     </span>
     <span class="timestamp">

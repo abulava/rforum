@@ -214,6 +214,10 @@ h1.topic {
   margin-bottom: 0.3em;
 }
 
+#topic_title {
+  width: 665px;
+}
+
 table.topics {
   margin-top: 1em;
 }
@@ -270,7 +274,8 @@ ul.topic_menu li {
   display: inline;  
 }
 
-ul.topic_menu li a {
+table.topics .topic_menu a {
+  font-size: 85%;
   padding: 0 5px;
 }
 

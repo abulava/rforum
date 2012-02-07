@@ -31,13 +31,32 @@ class TopicsController < ApplicationController
     @last_message = @topic.messages.last_message?
   end
 
+  def edit
+    @topic = Topic.find_by_id(params[:id])
+  end
+
+  def update
+    @topic = Topic.find_by_id(params[:id])
+    if @topic && current_user.admin?
+      if @topic.update_attributes(params[:topic])
+        flash[:notice] = 'Topic updated.'
+        redirect_to root_path(:page => params[:page])
+      else
+        render 'edit'
+      end
+    else
+#     flash[:alert] = 'Topic not found.' //TODO
+      redirect_to root_path(:page => params[:page])
+    end
+  end
+
   def destroy
     @topic = Topic.find_by_id(params[:id])
     if @topic && current_user.admin?
       @topic.destroy
       flash[:notice] = 'Topic destroyed.'
 #   else
-#     flash[:alert] = 'Topic not found.'
+#     flash[:alert] = 'Topic not found.' //TODO
     end
 
     redirect_to topics_path(:page => params[:page])

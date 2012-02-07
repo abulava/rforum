@@ -281,6 +281,59 @@ Then /^I could not delete "([^"]*)" topic$/ do |topic_title|
   }
 end
 
+Then /^I could change "([^"]*)" topic title to "([^"]*)"$/ do |topic_title, new_topic_title|
+  steps %Q{
+    Then I should see "#{topic_title}" listed in a topic list
+    When I submit update of "#{topic_title}" topic title to "#{new_topic_title}"
+    Then I should see a notification message "updated"
+    When I am on the home page
+    Then I should not see "#{topic_title}" listed in a topic list
+    And I should see "#{new_topic_title}" listed in a topic list
+  }
+end
+
+Then /^I submit update of "([^"]*)" topic title to "([^"]*)"$/ do |topic_title, new_topic_title|
+  topic = Topic.find_by_title(topic_title)
+
+  within "table.topics #topic_#{topic.id}" do
+    page.click_on('Edit topic')
+  end
+
+  page.current_path.should == edit_topic_path(topic)
+  fill_in('Title', :with => new_topic_title)
+  click_button('Submit')
+end
+
+Then /^I could not violate access changing "([^"]*)" topic title to "([^"]*)"$/ do |topic_title, new_topic_title|
+  steps %Q{
+    Then I should see "#{topic_title}" listed in a topic list
+  }
+
+  topic = Topic.find_by_title(topic_title)
+
+  within "table.topics #topic_#{topic.id}" do
+    page.should_not have_link('Edit topic')
+  end
+
+  page.driver.put topic_path(topic, :topic => Factory.attributes_for(:topic).merge(:title => new_topic_title))
+
+  steps %Q{
+    When I am on the home page
+    Then I should see "#{topic_title}" listed in a topic list
+  }
+end
+
+Then /^I could not change "([^"]*)" topic title to "([^"]*)"$/ do |topic_title, new_topic_title|
+  steps %Q{
+    Then I should see "#{topic_title}" listed in a topic list
+    When I submit update of "#{topic_title}" topic title to "#{new_topic_title}"
+    Then I should see an error explanation "too short"
+    And I should see a value "#{new_topic_title}" in a field "Title"
+    When I am on the home page
+    Then I should not see "#{new_topic_title}" listed in a topic list
+  }
+end
+
 Given /^(\d+) messages exist in a "([^"]*)" topic$/ do |total_messages, topic_title|
   topic = Topic.find_by_title(topic_title)
   topic.should_not be_blank

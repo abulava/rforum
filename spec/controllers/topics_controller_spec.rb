@@ -11,6 +11,10 @@ describe TopicsController do
 
     it { post :create, :topic => Factory.attributes_for(:topic) }
 
+    it { get :edit, :id => @topic }
+
+    it { put :update, :id => @topic, :topic => Factory.attributes_for(:topic) }
+
     it { delete :destroy, :id => @topic }
   end
 end

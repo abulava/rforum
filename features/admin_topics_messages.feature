@@ -1,7 +1,7 @@
 Feature: Administer messages and topics
   In order to administer discussions
   As an admin user
-  I want to delete messages and topics
+  I want to update/delete messages and topics
 
 Scenario: An admin is able to delete any user's messages
   Given the following users exist:
@@ -31,3 +31,26 @@ Scenario: An admin is able to delete topics
   And I am signed-in as a user "Jill"
   When I am on the home page
   Then I could delete "should be deleted" topic
+
+Scenario: Only an admin is able to change a topic
+  Given the following users exist:
+    | Name | admin |
+    | John | false |
+    | Jill | true  |
+  And a topic exists with a title of "foul term"
+  And I am signed-in as a user "John"
+  When I am on the home page
+  Then I could not violate access changing "foul term" topic title to "broken"
+  When I am signed-out
+  And I am signed-in as a user "Jill"
+  And I am on the home page
+  Then I could change "foul term" topic title to "censored"
+
+Scenario: An admin fails to update a topic with invalid attributes
+  Given the following user exists:
+    | Name | admin |
+    | Jill | true  |
+  And a topic exists with a title of "long"
+  And I am signed-in as a user "Jill"
+  When I am on the home page
+  Then I could not change "long" topic title to "no"
