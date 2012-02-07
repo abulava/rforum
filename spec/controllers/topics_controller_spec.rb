@@ -1,40 +1,16 @@
 require 'spec_helper'
 
 describe TopicsController do
-  describe "GET 'index'" do
-    it "should be successful" do
-      get :index
-      response.should be_success
-    end
-  end
-
-  describe "GET 'show'" do
+  describe "deny access to user-only actions when not logged in" do
     before(:each) do
       @topic = Factory(:topic)
     end
+    after { response.should redirect_to new_user_session_path }
 
-    it "should be successful" do
-      get :show, :id => @topic
-      response.should be_success
-    end
-  end
+    it { get :new }
 
+    it { post :create, :topic => Factory.attributes_for(:topic) }
 
-  describe "access control" do
-
-    it "should deny access to 'new' for guests" do
-      post :new
-      response.should redirect_to(new_user_session_path)
-    end
-
-    it "should deny access to 'create' for guests" do
-      post :create
-      response.should redirect_to(new_user_session_path)
-    end
-
-    it "should deny access to 'destroy' for guests" do
-      delete :destroy, :id => 1
-      response.should redirect_to(new_user_session_path)
-    end
+    it { delete :destroy, :id => @topic }
   end
 end

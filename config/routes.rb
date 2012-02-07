@@ -1,7 +1,16 @@
 Rforum::Application.routes.draw do
   root :to => "topics#index"
 
-  devise_for :users
+  devise_for :users, skip: :registrations do
+    resource :registration,
+      only: [:new, :create, :edit, :update],
+      path: 'users',
+      path_names: { new: 'sign_up' },
+      controller: 'devise/registrations',
+      as: :user_registration do
+      get :cancel
+    end
+  end
   resources :users, :only => :show
 
   resources :topics do
