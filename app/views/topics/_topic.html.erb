@@ -1,5 +1,10 @@
 <tr>
-  <td class="topic">
+  <td class="topic" id='<%= dom_id topic %>'>
+    <span class="topic_menu">
+      <% if current_user && current_user.admin? %>
+      <%= link_to "Delete topic", topic_path(topic, :page => params[:page]), :method => :delete %>
+      <% end %>
+    </span>
     <span class="timestamp">
       <%= link_to 'Last message', topic_path(topic, :page => topic.messages.total_pages.nonzero?) %> <%= time_ago_in_words(topic.messages.empty? ? topic.created_at : topic.messages.first.created_at) %> ago.
     </span><br />

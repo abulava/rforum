@@ -23,7 +23,7 @@ describe Topic do
     topic = @user.topics.create!(@attr)
   end
 
-  it { should have_many(:messages) }
+  it { should have_many(:messages).dependent(:destroy) }
 
   it { should_not allow_mass_assignment_of(:user_id) }
 

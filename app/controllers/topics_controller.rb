@@ -32,6 +32,14 @@ class TopicsController < ApplicationController
   end
 
   def destroy
-    render :text => "'Delete' stub"
+    @topic = Topic.find_by_id(params[:id])
+    if @topic && current_user.admin?
+      @topic.destroy
+      flash[:notice] = 'Topic destroyed.'
+#   else
+#     flash[:alert] = 'Topic not found.'
+    end
+
+    redirect_to topics_path(:page => params[:page])
   end
 end

@@ -13,7 +13,7 @@ class Topic < ActiveRecord::Base
   attr_accessible :title, :messages_attributes
 
   belongs_to :user
-  has_many :messages do
+  has_many :messages, :dependent => :destroy do
     def total_pages
       (self.count / Message.per_page.to_f).ceil
     end

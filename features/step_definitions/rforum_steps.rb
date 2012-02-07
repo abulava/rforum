@@ -243,8 +243,46 @@ Then /^I should not add a topic with a too short title$/ do
   }
 end
 
-Given /^(\d+) messages exist in a "([^"]*)" topic$/ do |total_messages, topic_name|
-  topic = Topic.find_by_title(topic_name)
+Then /^I could delete "([^"]*)" topic$/ do |topic_title|
+  steps %Q{
+    Then I should see "#{topic_title}" listed in a topic list
+  }
+  
+  topic = Topic.find_by_title(topic_title)
+
+  within "table.topics #topic_#{topic.id}" do
+    click_on "Delete topic"
+  end
+
+  page.current_path.should == topics_path
+
+  steps %Q{
+    When I am on the home page
+    Then I should not see "#{topic_title}" listed in a topic list
+  }
+end
+
+Then /^I could not delete "([^"]*)" topic$/ do |topic_title|
+  steps %Q{
+    Then I should see "#{topic_title}" listed in a topic list
+  }
+
+  topic = Topic.find_by_title(topic_title)
+
+  within "table.topics #topic_#{topic.id}" do
+    page.should_not have_link("Delete topic")
+  end
+
+  page.driver.delete topic_path(topic, topic.id)
+
+  steps %Q{
+    When I am on the home page
+    Then I should see "#{topic_title}" listed in a topic list
+  }
+end
+
+Given /^(\d+) messages exist in a "([^"]*)" topic$/ do |total_messages, topic_title|
+  topic = Topic.find_by_title(topic_title)
   topic.should_not be_blank
 
   total_messages.to_i.times do |n|
