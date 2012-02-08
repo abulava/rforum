@@ -22,8 +22,19 @@ class Message < ActiveRecord::Base
 
   validates_presence_of :user_id
   validates :content, :length => { :minimum => 3, :maximum => 1000 }
+  validate :content_as_bbcode
 
   default_scope :order => 'messages.created_at ASC'
 
   self.per_page = 5
+
+  private
+    def content_as_bbcode
+      if content
+        result = content.is_valid_bbcode?
+        unless result == true
+          errors.add(:content, result)
+        end
+      end
+    end
 end

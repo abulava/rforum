@@ -49,5 +49,14 @@ describe Message do
     it { should ensure_length_of(:content).
                   is_at_least(3).
                   is_at_most(1000) }
+
+    it "should validate content as bb code" do
+      @message.valid?
+
+      lambda do
+        @message.content = "invalid [b]b code"
+        @message.valid?
+      end.should change(@message.errors, :length)
+    end
   end
 end

@@ -8,7 +8,7 @@
     <span class="timestamp">
       Posted by <%= link_to "#{message.user.name}", message.user %> <%= time_ago_in_words(message.created_at) %> ago.
     </span><br />
-    <div class="content"><%= message.content %></div>
+    <div class="content"><%= raw message.content.bbcode_to_html %></div>
     <div class="attaches"><ul><%= render message.attaches %></ul></div>
   </td>
 </tr>

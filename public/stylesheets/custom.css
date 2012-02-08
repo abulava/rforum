@@ -282,8 +282,22 @@ table.topics .topic_menu a {
 .message .content {
   padding-top: 5px;
 }
+
+.message .content img {
+  max-width: 640px;
+  max-height: 700px;
+  width: expression(this.width > 640 ? "640px" : true);
+  height: expression(this.height > 700 ? "700px" : true);
+}
+
+.message .content .quote {
+  padding: 4px;
+  border: 1px dotted #424242;
+  border-left: 4px solid #8394b2;
+}
+
 .message_content textarea {
-  width: 655px;
+  width: 602px;
   height: 250px;
 }
 
