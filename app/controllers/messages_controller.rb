@@ -1,8 +1,8 @@
 class MessagesController < ApplicationController
   before_filter :authenticate_user!
+  before_filter { |c| c.load_topic params[:topic_id] }
 
   def new
-    @topic = Topic.find(params[:topic_id])
     @message = @topic.messages.new
     3.times do
       @message.attaches.build
@@ -12,7 +12,6 @@ class MessagesController < ApplicationController
   end
 
   def create
-    @topic = Topic.find(params[:topic_id])
     @message = @topic.messages.build(params[:message])
     @message.user = current_user
     if @message.save
@@ -24,7 +23,6 @@ class MessagesController < ApplicationController
   end
 
   def destroy
-    @topic = Topic.find(params[:topic_id])
     if current_user.admin?
       @message = Message.find_by_id params[:id]
     else

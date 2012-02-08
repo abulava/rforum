@@ -1,5 +1,6 @@
 class TopicsController < ApplicationController
   before_filter :authenticate_user!, :except => [:show, :index]
+  before_filter :except => [:new, :create, :index] { |c| c.load_topic params[:id] }
 
   def new
     @topic = current_user.topics.new
@@ -24,7 +25,6 @@ class TopicsController < ApplicationController
   end
 
   def show
-    @topic = Topic.find(params[:id])
     @messages = @topic.messages.paginate(:page     => params[:page],
                                          :per_page => Message.per_page)
     @title = @topic.title
@@ -32,12 +32,10 @@ class TopicsController < ApplicationController
   end
 
   def edit
-    @topic = Topic.find_by_id(params[:id])
   end
 
   def update
-    @topic = Topic.find_by_id(params[:id])
-    if @topic && current_user.admin?
+    if current_user.admin?
       if @topic.update_attributes(params[:topic])
         flash[:notice] = 'Topic updated.'
         redirect_to root_path(:page => params[:page])
@@ -45,18 +43,15 @@ class TopicsController < ApplicationController
         render 'edit'
       end
     else
-#     flash[:alert] = 'Topic not found.' //TODO
+      flash[:alert] = 'Access violation.'
       redirect_to root_path(:page => params[:page])
     end
   end
 
   def destroy
-    @topic = Topic.find_by_id(params[:id])
-    if @topic && current_user.admin?
+    if current_user.admin?
       @topic.destroy
       flash[:notice] = 'Topic destroyed.'
-#   else
-#     flash[:alert] = 'Topic not found.' //TODO
     end
 
     redirect_to topics_path(:page => params[:page])
