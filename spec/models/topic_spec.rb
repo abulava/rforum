@@ -12,6 +12,11 @@
 require 'spec_helper'
 
 describe Topic do
+  def add_message_to(topic)
+    topic.messages.
+          build(Factory.attributes_for(:message)).save(:validate => false)
+  end
+
   before(:each) do
     @user = Factory(:user)
     @attr = {
@@ -46,26 +51,26 @@ describe Topic do
     it "should return proper messages.total_pages" do
       @topic.messages.total_pages.should == 0
 
-      Factory(:message, :topic => @topic)
+      add_message_to @topic
       @topic.messages.total_pages.should == 1
 
       (Message.per_page-1).times do 
-        Factory(:message, :topic => @topic)
+        add_message_to @topic
       end
       @topic.messages.total_pages.should == 1
 
-      Factory(:message, :topic => @topic)
+      add_message_to @topic
       @topic.messages.total_pages.should == 2
     end
 
-    it "should respond to messages.last_message?" do
-      @topic.messages.last_message?.should be_false
-
-      Factory(:message, :topic => @topic)
-      @topic.messages.last_message?.should be_true
-
-      Factory(:message, :topic => @topic)
-      @topic.messages.last_message?.should be_false
+    it "should respond to messages.single_message?" do
+      @topic.messages.single_message?.should be_false
+  
+      add_message_to @topic
+      @topic.messages.single_message?.should be_true
+  
+      add_message_to @topic
+      @topic.messages.single_message?.should be_false
     end
   end
 

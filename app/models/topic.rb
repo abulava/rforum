@@ -18,8 +18,8 @@ class Topic < ActiveRecord::Base
       (self.count / Message.per_page.to_f).ceil
     end
 
-    def last_message?
-      self.count == 1
+    def single_message?
+      self.size == 1
     end
   end
 

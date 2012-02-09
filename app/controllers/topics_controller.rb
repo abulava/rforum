@@ -28,7 +28,7 @@ class TopicsController < ApplicationController
     @messages = @topic.messages.paginate(:page     => params[:page],
                                          :per_page => Message.per_page)
     @title = @topic.title
-    @last_message = @topic.messages.last_message?
+    @single_message = @topic.messages.single_message?
   end
 
   def edit
