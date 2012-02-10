@@ -2,16 +2,18 @@
 #
 # Table name: topics
 #
-#  id         :integer         not null, primary key
-#  title      :string(255)
-#  created_at :datetime
-#  updated_at :datetime
-#  user_id    :integer
+#  id          :integer         not null, primary key
+#  title       :string(255)
+#  created_at  :datetime
+#  updated_at  :datetime
+#  user_id     :integer
+#  category_id :integer
 #
 
 class Topic < ActiveRecord::Base
   attr_accessible :title, :messages_attributes
 
+  belongs_to :category
   belongs_to :user
   has_many :messages, :dependent => :destroy do
     def total_pages

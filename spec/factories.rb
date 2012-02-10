@@ -1,9 +1,13 @@
 require 'factory_girl'
 
 Factory.define :user do |user|
-  user.sequence(:name) {|i| "Test User #{i}" }
-  user.sequence(:email) {|i| "user#{i}@test.com" }
+  user.sequence(:name) { |i| "Test User #{i}" }
+  user.sequence(:email) { |i| "user#{i}@test.com" }
   user.password 'please'
+end
+
+Factory.define :category do |category|
+  category.sequence(:name) { |i| "Category #{i}" }
 end
 
 Factory.define :topic do |topic|
@@ -12,7 +16,7 @@ Factory.define :topic do |topic|
 end
 
 Factory.define :message do |msg|
-  msg.sequence(:content) {|i| "message #{i}" }
+  msg.sequence(:content) { |i| "message #{i}" }
   msg.association :topic
   msg.association :user
 end

@@ -2,11 +2,12 @@
 #
 # Table name: topics
 #
-#  id         :integer         not null, primary key
-#  title      :string(255)
-#  created_at :datetime
-#  updated_at :datetime
-#  user_id    :integer
+#  id          :integer         not null, primary key
+#  title       :string(255)
+#  created_at  :datetime
+#  updated_at  :datetime
+#  user_id     :integer
+#  category_id :integer
 #
 
 require 'spec_helper'
@@ -24,7 +25,7 @@ describe Topic do
     }
   end
 
-  it "should should create a new instance given valid attributes" do
+  it "should create a new instance given valid attributes" do
     topic = @user.topics.create!(@attr)
   end
 
@@ -35,6 +36,8 @@ describe Topic do
   it { should belong_to(:user) }
 
   it { should validate_presence_of(:user_id) }
+
+  it { should belong_to(:category) }
 
   describe "message association" do
     before(:each) do

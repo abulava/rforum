@@ -13,6 +13,8 @@ Rforum::Application.routes.draw do
   end
   resources :users, :only => :show
 
+  resources :categories, :except => :show
+
   resources :topics do
     resources :messages, :only => [:new, :create, :destroy]
   end
