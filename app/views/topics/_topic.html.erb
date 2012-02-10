@@ -9,6 +9,14 @@
     <span class="timestamp">
       <%= link_to 'Last message', topic_path(topic, :page => topic.messages.total_pages.nonzero?) %> <%= time_ago_in_words(topic.messages.empty? ? topic.created_at : topic.messages.first.created_at) %> ago.
     </span><br />
-    <%= link_to topic.title, topic %>
+    <%= link_to topic.title, topic %><br />
+    <span class="category">
+      <% if topic.category %>
+        <span class="category_label">Category:</span>
+        <%= topic.category.name %>
+      <% else %>
+        <span class="category_label">Uncategorized</span>
+      <% end %>
+    </span>
   </td>
 </tr>

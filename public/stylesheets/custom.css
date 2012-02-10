@@ -320,3 +320,12 @@ div.user_info span.user_name {
 div.user_info span.topics {
   font-size: 80%;
 }
+
+td.topic .category {
+  font-size: 80%;
+  padding-left: 1em;
+}
+
+.category_label {
+  font-weight: bold;
+}

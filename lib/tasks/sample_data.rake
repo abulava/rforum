@@ -7,11 +7,16 @@ namespace :db do
     users = [User.first]
     users.push User.create!(user_attr.merge(:name => 'Test User',
                                             :email => 'user@example.com'))
+    categories = []
+    6.times do |n|
+      categories.push Category.create!(:name => "Category #{n+1}")
+    end
 
     25.times do |n|
       fake = Faker::Lorem.sentence(4)
       title = "Topic #{n+1}: #{fake}"
       topic = users.sample.topics.build(:title => title)
+      topic.category = categories.sample
       topic.save!
 
       msg = topic.messages.build(:content => "Starting topic #{n+1}.")

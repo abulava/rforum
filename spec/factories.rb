@@ -13,6 +13,7 @@ end
 Factory.define :topic do |topic|
   topic.title 'Making BDD fun!'
   topic.association :user
+  topic.association :category
 end
 
 Factory.define :message do |msg|
