@@ -1,0 +1,11 @@
+<%= form_for @search do |f| %>
+  <%= f.label :content_contains %>
+  <%= f.text_field :content_contains %><br />
+  <%= f.submit %>
+<% end %>
+
+<%= will_paginate @messages %>
+<table class="messages" summary="Search result messages">
+  <%= render @messages %>
+</table>
+<%= will_paginate @messages %>

@@ -1,7 +1,14 @@
 class MessagesController < ApplicationController
-  before_filter :authenticate_user!
-  before_filter { |c| c.load_topic params[:topic_id] }
+  before_filter :authenticate_user!, :except => :index
+  before_filter :except => [:index] { |c| c.load_topic params[:topic_id] }
   before_filter :load_message, :only => :destroy
+
+  def index
+    @search = Message.search(params[:search])
+    search_results = @search.search_attributes.values.all?(&:blank?) ? [] : @search.all
+    @messages = search_results.paginate(:page     => params[:page],
+                                        :per_page => Message.per_page)
+  end
 
   def new
     @message = @topic.messages.new

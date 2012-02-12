@@ -19,6 +19,8 @@ Rforum::Application.routes.draw do
     resources :messages, :only => [:new, :create, :destroy]
   end
 
+  resources :messages, :only => :index
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

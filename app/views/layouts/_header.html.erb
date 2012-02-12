@@ -5,8 +5,9 @@
 
   <nav class="round">
     <ul>
-      <li><%= link_to "Home", root_path %></li>
-      <li><%= link_to "Back", :back %></li>
+      <li><%= link_to 'Home', root_path %></li>
+      <li><%= link_to 'Back', :back %></li>
+      <li><%= link_to 'Search', messages_path %></li>
       <li><%= link_to('Add topic', new_topic_path)  %></li>
       <li><%= link_to('Categories', categories_path)  %></li>
     </ul>

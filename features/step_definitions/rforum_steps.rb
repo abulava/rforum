@@ -23,6 +23,10 @@ def within_messages_list(&block)
   within(".messages", &block)
 end
 
+def within_upper_left_menu(&block)
+  within("header nav", &block)
+end
+
 def sign_in_user(user_name)
   user = User.find_by_name(user_name)
   user.should_not be_blank
@@ -60,6 +64,13 @@ def update_topic_title(topic_title, new_topic_title)
 
   page.current_path.should == edit_topic_path(topic)
   fill_in('Title', :with => new_topic_title)
+  click_button('Submit')
+end
+
+def create_topic_message(message_content, topic_title)
+  visit_new_topic_message_page_of topic_title
+
+  fill_in('Content', :with => message_content)
   click_button('Submit')
 end
 
@@ -131,13 +142,6 @@ Then /^a message containing "([^"]*)" should be in a topic titled "([^"]*)"$/ do
   within_messages_list do
     page.should have_content(message_content)
   end
-end
-
-def create_topic_message(message_content, topic_title)
-  visit_new_topic_message_page_of topic_title
-
-  fill_in('Content', :with => message_content)
-  click_button('Submit')
 end
 
 When /^I post a message containing "([^"]*)" to a topic titled "([^"]*)"$/ do |message_content, topic_title|
@@ -216,7 +220,7 @@ Then /^I delete "([^"]*)" message with a flash notification "([^"]*)"$/ do |cont
   message = Message.find_by_content content
   page.should have_content(message.content)
   within ".messages #message_#{message.id}" do
-    click_on "Delete message"
+    click_on 'Delete message'
   end
 
   within_flash_notice do
@@ -234,8 +238,8 @@ Then /^I add a "([^"]*)" topic with a "([^"]*)" message$/ do |topic_title, messa
    page.should_not have_content(topic_title)
   end
 
-  within "header nav" do
-    click_on "Add topic"
+  within_upper_left_menu do
+    click_on 'Add topic'
   end
   current_path.should == new_topic_path
   fill_in('Title', :with => topic_title)
@@ -261,8 +265,8 @@ end
 Then /^I should not add a topic with a too short title$/ do
   short_title = "1"
 
-  within "header nav" do
-    click_on "Add topic"
+  within_upper_left_menu do
+    click_on 'Add topic'
   end
   current_path.should == new_topic_path
   fill_in('Title', :with => short_title)
@@ -293,7 +297,7 @@ Then /^I could delete "([^"]*)" topic$/ do |topic_title|
   topic = Topic.find_by_title(topic_title)
 
   within "table.topics #topic_#{topic.id}" do
-    click_on "Delete topic"
+    click_on 'Delete topic'
   end
 
   page.current_path.should == topics_path
@@ -409,7 +413,7 @@ Then /^I should see (\d+) messages per page on a topic "([^"]*)"$/ do |test_per_
   end
 
   within ".pagination" do
-    click_on "Next"
+    click_on 'Next'
   end
 
   within_messages_list do
@@ -417,4 +421,14 @@ Then /^I should see (\d+) messages per page on a topic "([^"]*)"$/ do |test_per_
   end
 
   Message.per_page = normal_per_page
+end
+
+When /^I follow a search link$/ do
+  within_upper_left_menu do
+    click_on('Search')
+  end
+end
+
+Then /^I should see a search form$/ do
+  page.current_path.should == messages_path
 end
