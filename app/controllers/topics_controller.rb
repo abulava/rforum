@@ -36,25 +36,19 @@ class TopicsController < ApplicationController
   end
 
   def update
-    if current_user.admin?
-      if @topic.update_attributes(params[:topic])
-        flash[:notice] = 'Topic updated.'
-        redirect_to root_path(:page => params[:page])
-      else
-        render 'edit'
-      end
-    else
-      flash[:alert] = 'Access violation.'
+    authorize! :update, @topic
+    if @topic.update_attributes(params[:topic])
+      flash[:notice] = 'Topic updated.'
       redirect_to root_path(:page => params[:page])
+    else
+      render 'edit'
     end
   end
 
   def destroy
-    if current_user.admin?
-      @topic.destroy
-      flash[:notice] = 'Topic destroyed.'
-    end
-
+    authorize! :destroy, @topic
+    @topic.destroy
+    flash[:notice] = 'Topic destroyed.'
     redirect_to topics_path(:page => params[:page])
   end
 end

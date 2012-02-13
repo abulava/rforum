@@ -35,13 +35,12 @@ class MessagesController < ApplicationController
   end
 
   def destroy
+    authorize! :destroy, @message
     if @topic.messages.single_message?
       flash[:alert] = 'Single remaining message in a topic can\'t be destroyed.'
     else
-      if current_user.admin? or current_user == @message.user
-        @message.destroy
-        flash[:notice] = 'Message destroyed.'
-      end
+      @message.destroy
+      flash[:notice] = 'Message destroyed.'
     end
 
     redirect_page = [params[:page].to_i,@topic.messages.total_pages].min.nonzero?

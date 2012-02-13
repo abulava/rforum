@@ -1,7 +1,7 @@
 <tr>
   <td class="message" id='<%= dom_id message %>'>
     <span class="message_menu">
-      <% if current_user && (current_user == message.user || current_user.admin?) && !@single_message %>
+      <% if can?(:destroy, message) && !@single_message %>
         <%= link_to "Delete message", topic_message_path(message.topic, message, :page => params[:page]), :method => :delete %>
       <% end %>
     </span>

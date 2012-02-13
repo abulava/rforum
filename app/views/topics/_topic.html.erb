@@ -1,8 +1,10 @@
 <tr>
   <td class="topic" id='<%= dom_id topic %>'>
     <span class="topic_menu">
-      <% if current_user && current_user.admin? %>
+      <% if can? :destroy, topic %>
       <%= link_to "Delete topic", topic_path(topic, :page => params[:page]), :method => :delete %>
+      <% end %>
+      <% if can? :update, topic %>
       <%= link_to "Edit topic", edit_topic_path(topic, :page => params[:page]) %>
       <% end %>
     </span>
