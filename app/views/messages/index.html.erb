@@ -20,9 +20,8 @@
   <%= f.submit value='Run search' %>
 <% end %>
 
-  <% unless @messages.empty? %>
 <%= will_paginate @messages %>
-  <% end %>
 <table class="messages" summary="Search result messages">
   <%= render @messages %>
 </table>
+<%= will_paginate @messages %>

@@ -6,11 +6,11 @@ class MessagesController < ApplicationController
   def index
     @search = Message.search(params[:search])
 
-    if search_attributes_set?
+    if @search.search_attributes_set?
       @messages = @search.all.paginate(:page     => params[:page],
                                        :per_page => Message.per_page)
     else
-      @messages = []
+      @messages = [].paginate
     end
   end
 
@@ -55,11 +55,5 @@ class MessagesController < ApplicationController
         flash[:alert] = 'Message not found.'
         redirect_to topic_path(@topic)
       end
-    end
-
-    def search_attributes_set?
-      # TODO MetaSearch::Searches::ActiveRecord looks like right place for the method
-      search_attributes = @search.search_attributes.select { |k,v| k != 'meta_sort' }
-      !search_attributes.values.all?(&:blank?)
     end
 end
