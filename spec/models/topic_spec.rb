@@ -48,7 +48,7 @@ describe Topic do
       msg1 = Factory(:message, :topic => @topic, :created_at => 1.hour.ago)
       msg2 = Factory(:message, :topic => @topic, :created_at => 1.day.ago)
 
-      @topic.messages.should == [msg2, msg1]
+      @topic.messages.sort_by_created_at_asc.should == [msg2, msg1]
     end
 
     it "should return proper messages.total_pages" do

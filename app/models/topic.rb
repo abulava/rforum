@@ -11,7 +11,7 @@
 #
 
 class Topic < ActiveRecord::Base
-  attr_accessible :title, :messages_attributes
+  attr_accessible :title, :messages_attributes, :category_id
 
   belongs_to :category
   belongs_to :user

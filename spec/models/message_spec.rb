@@ -59,4 +59,11 @@ describe Message do
       end.should change(@message.errors, :length)
     end
   end
+
+  it "should find recent messages" do
+    old_message = Factory(:message, :created_at => 8.days.ago)
+    recent_message = Factory(:message, :created_at => 1.day.ago)
+
+    Message.created_in_recent_days(7).should == [recent_message]
+  end
 end

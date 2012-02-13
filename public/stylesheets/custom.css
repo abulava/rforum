@@ -329,3 +329,7 @@ td.topic .category {
 .category_label {
   font-weight: bold;
 }
+
+.message_search {
+  padding-bottom: 2em;
+}

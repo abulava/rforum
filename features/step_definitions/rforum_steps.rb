@@ -7,6 +7,10 @@ def visit_topic_page_with_title_of(title)
   visit topic_path(topic)
 end
 
+def visit_search_page
+  visit messages_path
+end
+
 def within_flash_notice(&block)
   within("#flash_notice", &block)
 end
@@ -431,4 +435,48 @@ end
 
 Then /^I should see a search form$/ do
   page.current_path.should == messages_path
+
+  page.should have_field 'Content or message\'s topic like'
+  page.should have_field 'Message author\'s name like'
+  page.should have_select 'Created in recent'
+  #page.should have_select 'Created after' TODO
+  page.should have_select 'Topic category'
+
+  page.should have_button 'Run search'
+end
+
+Given /^I am on the search page$/ do
+  visit_search_page
+end
+
+When /^I search by message content of "([^"]*)"$/ do |query|
+  fill_in 'Content or message\'s topic like', :with => query
+  click_on('Run search')
+end
+
+When /^I search by message's topic "([^"]*)"$/ do |query|
+  fill_in 'Content or message\'s topic like', :with => query
+  click_on('Run search')
+end
+
+Given /^the following messages with mangled creation time exist$/ do |messages_table|
+  messages_table.hashes.each do |hash|
+    Factory(:message, hash.merge('created_at' => eval(hash['created_at'])))
+  end
+end
+
+When /^I search by messages created in recent "([^"]*)"$/ do |period|
+  select(period, :from => 'Created in recent')
+  click_on('Run search')
+end
+
+When /^I search by "([^"]*)" and "([^"]*)" categories$/ do |category1, category2|
+  select(category1, :from => 'Topic category')
+  select(category2, :from => 'Topic category')
+  click_on('Run search')
+end
+
+When /^I search by message's author of "([^"]*)"$/ do |query|
+  fill_in 'Message author\'s name like', :with => query
+  click_on('Run search')
 end

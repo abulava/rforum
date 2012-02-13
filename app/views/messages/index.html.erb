@@ -1,11 +1,28 @@
 <%= form_for @search do |f| %>
-  <%= f.label :content_contains %>
-  <%= f.text_field :content_contains %><br />
-  <%= f.submit %>
+<table>
+  <tr><td>
+  <%= f.label :content_or_topic_title_contains, 'Content or message\'s topic like' %>
+  <%= f.text_field :content_or_topic_title_contains %><br />
+  <%= f.label :user_name_contains, 'Message author\'s name like' %>
+  <%= f.text_field :user_name_contains %><br />
+  <%= f.label :created_in_recent_days, 'Created in recent' %>
+  <%= f.select :created_in_recent_days, Message.created_in_recent_days_options, { :include_blank => 'any' } %><br />
+  <%= f.label :created_at_greater_than, 'Created after' %>
+  <%= f.date_select :created_at_greater_than, :include_blank => true %></td>
+      <td>
+  <%= f.label :topic_category_id_in, 'Topic category' %><br />
+  <%= f.collection_select :topic_category_id_in, Category.all, :id, :name, {}, { :multiple => true } %></td>
+  </tr>
+</table>
+  <% unless @messages.empty? %>
+    Sort by <%= f.sort_link :created_at, :default_order => :desc %><br />
+  <% end %>
+  <%= f.submit value='Run search' %>
 <% end %>
 
+  <% unless @messages.empty? %>
 <%= will_paginate @messages %>
+  <% end %>
 <table class="messages" summary="Search result messages">
   <%= render @messages %>
 </table>
-<%= will_paginate @messages %>

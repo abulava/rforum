@@ -8,6 +8,7 @@ gem 'devise', '1.5.3'
 gem 'paperclip', '2.5.2'
 gem 'ruby-bbcode', '0.0.2'
 gem 'meta_search', '1.0.6'
+gem 'meta_where', '1.0.4'
 
 group :development do
   gem 'rspec-rails', '2.6.1'

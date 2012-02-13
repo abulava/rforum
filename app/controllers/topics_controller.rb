@@ -25,7 +25,8 @@ class TopicsController < ApplicationController
   end
 
   def show
-    @messages = @topic.messages.paginate(:page     => params[:page],
+    @messages = @topic.messages.sort_by_created_at_asc
+                               .paginate(:page     => params[:page],
                                          :per_page => Message.per_page)
     @title = @topic.title
     @single_message = @topic.messages.single_message?
