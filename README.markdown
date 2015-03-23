@@ -1,5 +1,7 @@
 # Rforum
 
+NB! Update the project
+
 ---
 The testing ground for Ruby on Rails development. 
 This is just me learning the ropes.
