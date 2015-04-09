@@ -12,4 +12,4 @@ postgresql
 ## Sample data
 (bundle exec) rake db:populate
 
-[Heroku](https://infinite-dawn-4198.herokuapp.com/)
+[Heroku](https://infinite-dawn-4198.herokuapp.com/).
