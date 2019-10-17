@@ -5,7 +5,7 @@ gem 'mysql2'
 gem 'will_paginate', '3.0.pre2'
 gem 'jquery-rails', '1.0.19'
 gem 'devise', '1.5.3'
-gem 'paperclip', '2.5.2'
+gem 'paperclip', '4.2.2'
 gem 'ruby-bbcode', '0.0.2'
 gem 'meta_search', '1.0.6'
 gem 'meta_where', '1.0.4'
@@ -28,6 +28,6 @@ group :test do
   gem 'database_cleaner', '0.7.1'
   gem 'launchy', '2.0.5'
   gem 'escape_utils', '0.2.4'
-  gem 'paperclip', '2.5.2'
+  gem 'paperclip', '4.2.2'
 end
 
