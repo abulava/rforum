@@ -173,7 +173,7 @@ GEM
     tzinfo (0.3.31)
     warden (1.1.0)
       rack (>= 1.0)
-    will_paginate (3.0.pre2)
+    will_paginate (3.0.5)
     xpath (0.1.4)
       nokogiri (~> 1.3)
 
@@ -201,4 +201,4 @@ DEPENDENCIES
   rspec-rails (= 2.6.1)
   ruby-bbcode (= 0.0.2)
   shoulda-matchers (= 1.0.0)
-  will_paginate (= 3.0.pre2)
+  will_paginate (= 3.0.5)
